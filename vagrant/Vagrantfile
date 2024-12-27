@@ -1,0 +1,49 @@
+Vagrant.configure("2") do |config|
+  # config.ssh.private_key_path = "~/.ssh/id_rsa"
+  config.ssh.forward_agent = true
+  servers=[
+      {
+        :hostname => "devopsenv-controlplane-1",
+        :box => "bento/ubuntu-22.04",
+        :ip => "192.168.56.4",
+        :ssh_port => '2210'
+      },
+      {
+        :hostname => "devopsenv-node-1",
+        :box => "bento/ubuntu-22.04",
+        :ip => "192.168.56.5",
+        :ssh_port => '2213'
+      },
+      {
+        :hostname => "devopsenv-node-2",
+        :box => "bento/ubuntu-22.04",
+        :ip => "192.168.56.6",
+        :ssh_port => '2213'
+      },
+      {
+        :hostname => "devopsenv-ansible",
+        :box => "bento/ubuntu-22.04",
+        :ip => "192.168.56.7",
+        :ssh_port => '2214'
+      }
+
+    ]
+
+  servers.each do |machine|
+      config.vm.define machine[:hostname] do |node|
+          node.vm.box = machine[:box]
+          node.vm.hostname = machine[:hostname]
+          node.vm.network :private_network, ip: machine[:ip]
+          node.vm.network "forwarded_port", guest: 22, host: machine[:ssh_port], id: "ssh"
+          node.vm.provider :virtualbox do |vb|
+            if machine[:hostname].include?('controlplane')
+              vb.customize ["modifyvm", :id, "--memory", 2000]
+              vb.customize ["modifyvm", :id, "--cpus", 2]
+            else
+              vb.customize ["modifyvm", :id, "--memory", 1000]
+              vb.customize ["modifyvm", :id, "--cpus", 1]
+            end
+          end
+      end
+  end
+end
