@@ -1,5 +1,3 @@
 [servers]
 devopsenv-controlplane-1
-devopsenv-controlplane-2
-devopsenv-controlplane-3
 devopsenv-node-1
