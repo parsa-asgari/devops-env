@@ -1,3 +1,6 @@
 [servers]
 devopsenv-controlplane-1
 devopsenv-node-1
+
+[ansible]
+devopsenv-ansible

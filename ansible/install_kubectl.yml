@@ -1,1 +1,27 @@
-# to add kubectl to ansible-node
+---
+- name: Install kubectl on target systems
+  hosts: ansible
+  become: yes
+  tasks:
+    - name: Install kubectl on Debian-based systems
+      apt:
+        name: kubectl
+        state: latest
+      when: ansible_os_family == "Debian"
+
+    - name: Install kubectl binary manually (for non-Debian systems)
+      shell: |
+        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+        chmod +x kubectl
+        mv kubectl /usr/local/bin/kubectl
+      args:
+        creates: /usr/local/bin/kubectl
+      when: ansible_os_family != "Debian"
+
+    - name: Verify kubectl installation
+      command: kubectl version --client
+      register: kubectl_version
+      ignore_errors: yes
+
+    - debug:
+        msg: "kubectl version installed: {{ kubectl_version.stdout }}"

@@ -1,6 +1,6 @@
 ---
 - name: Install K3s on cluster
-  hosts: all
+  hosts: servers
   become: yes
   vars:
     k3s_version: "v1.28.2+k3s1"
