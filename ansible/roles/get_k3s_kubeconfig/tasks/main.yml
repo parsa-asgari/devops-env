@@ -3,6 +3,3 @@
   shell: |
     cat /etc/rancher/k3s/k3s.yaml
   register: k3s_kubeconfig
-
-- debug:
-    msg: "kubectl config: {{ k3s_kubeconfig.stdout }}"

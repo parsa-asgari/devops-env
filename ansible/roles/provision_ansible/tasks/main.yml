@@ -9,8 +9,6 @@
 - name: Verify kubectl installation
   command: kubectl version --client
   register: kubectl_version
-- debug:
-    msg: "kubectl version installed: {{ kubectl_version.stdout }}"
 
 - name: Bash completion for Kubectl
   shell: | 
