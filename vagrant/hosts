@@ -1,4 +1,0 @@
-192.168.56.4 devopsenv-ansible
-192.168.56.5 devopsenv-controlplane-1
-192.168.56.6 devopsenv-node-1
-192.168.56.7 devopsenv-node-2

@@ -1,1 +1,3 @@
-# devops-env
+# DevOpsHobbies-Homelab
+
+## Project Structure
