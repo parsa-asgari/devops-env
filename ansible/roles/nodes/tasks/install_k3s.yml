@@ -1,0 +1,23 @@
+---
+- name: Ensure curl is installed
+  package:
+    name: curl
+    state: present
+- name: Install K3s on master node
+  when: "'controlplane' in inventory_hostname"
+  shell: |
+    curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION={{ k3s_version }} sh -s -
+  args:
+    creates: /etc/systemd/system/k3s.service
+- name: Get the K3s join token on the master
+  when: "'controlplane' in inventory_hostname"
+  shell: cat /var/lib/rancher/k3s/server/node-token
+  register: k3s_token
+  changed_when: false
+- name: Install K3s on worker nodes
+  when: "'controlplane' not in inventory_hostname"
+  shell: |
+    curl -sfL https://get.k3s.io | K3S_URL=https://{{ master_domain }}:6443 K3S_TOKEN={{ hostvars['controlplane']['k3s_token'].stdout }} INSTALL_K3S_VERSION={{ k3s_version }} sh -s -
+  args:
+    creates: /etc/sys
+
