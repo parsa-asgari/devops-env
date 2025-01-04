@@ -60,9 +60,9 @@ Vagrant.configure("2") do |config|
             node.vm.provision "shell", inline: <<-SHELL
             sudo apt-get update
             sudo apt-get install -y git python3 python3-pip sshpass bash-completion
-            python3 -m pip install --upgrade pip
-            pip install ansible
             sudo bash -c 'cat /vagrant/hosts >> /etc/hosts'
+            runuser -l vagrant -c 'pip install --upgrade pip'
+            runuser -l vagrant -c 'pip install ansible'
             runuser -l vagrant -c 'ssh-keygen -b 2048 -t rsa -f ~/.ssh/id_rsa -q -N ""'
             runuser -l vagrant -c 'sshpass -p vagrant ssh-copy-id -o StrictHostKeyChecking=no localhost'
             runuser -l vagrant -c 'sshpass -p vagrant ssh-copy-id -o StrictHostKeyChecking=no devopsenv-controlplane-1'
