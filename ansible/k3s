@@ -1,0 +1,4 @@
+[k3s]
+devopsenv-controlplane-1
+devopsenv-node-1
+devopsenv-node-2

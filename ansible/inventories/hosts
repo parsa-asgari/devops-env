@@ -1,9 +1,0 @@
-nodes:
-  hosts:
-    devopsenv-controlplane-1
-    devopsenv-node-1
-    devopsenv-node-2
-
-control:
-  hosts:
-    devopsenv-ansible

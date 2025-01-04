@@ -1,5 +1,6 @@
 ---
 # file: control.yml
-- hosts: control
+- hosts: ansible
   roles:
-    - control
+    - provision_ansible
+  become: yes

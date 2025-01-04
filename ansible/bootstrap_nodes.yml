@@ -1,0 +1,6 @@
+---
+# file: bootstrap-nodes.yml
+- hosts: k3s
+  roles:
+    - provision_k3s
+  become: yes
