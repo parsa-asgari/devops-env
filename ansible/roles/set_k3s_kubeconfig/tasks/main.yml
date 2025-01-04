@@ -1,0 +1,6 @@
+---
+- name: Set the K3s kubeconfig
+  shell: |
+    echo "{{ hostvars['devopsenv-controlplane-1']['k3s_kubeconfig'].stdout }}" >> ~/.kube/config
+  register: k3s_kubeconfig
+

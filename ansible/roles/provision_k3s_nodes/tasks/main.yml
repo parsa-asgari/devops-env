@@ -1,0 +1,12 @@
+---
+- name: Ensure curl is installed
+  package:
+    name: curl
+    state: present
+- name: Install K3s on worker nodes
+  shell: |
+    curl -sfL https://get.k3s.io | K3S_URL=https://{{ master_domain }}:6443 K3S_TOKEN={{ hostvars['devopsenv-controlplane-1']['k3s_token'].stdout }} INSTALL_K3S_VERSION={{ k3s_version }} sh -s -
+  args:
+    creates: /etc/systemd/system/k3s.service
+
+

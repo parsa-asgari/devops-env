@@ -1,0 +1,21 @@
+---
+# file: bootstrap-nodes.yml
+- hosts: k3s-control
+  roles:
+    - role: provision_k3s_control
+  become: yes
+
+- hosts: k3s-nodes
+  roles:
+    - role: provision_k3s_nodes
+  become: yes
+
+- hosts: k3s-control
+  roles:
+    - role: get_k3s_kubeconfig
+  become: yes
+
+- hosts: ansible
+  roles:
+    - role: set_k3s_kubeconfig
+  become: no
