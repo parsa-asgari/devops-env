@@ -64,10 +64,12 @@ Vagrant.configure("2") do |config|
             runuser -l vagrant -c 'pip install --upgrade pip'
             runuser -l vagrant -c 'pip install ansible'
             runuser -l vagrant -c 'ssh-keygen -b 2048 -t rsa -f ~/.ssh/id_rsa -q -N ""'
+            runuser -l vagrant -c 'sshpass -p vagrant ssh-copy-id -o StrictHostKeyChecking=no devopsenv-ansible'
             runuser -l vagrant -c 'sshpass -p vagrant ssh-copy-id -o StrictHostKeyChecking=no localhost'
             runuser -l vagrant -c 'sshpass -p vagrant ssh-copy-id -o StrictHostKeyChecking=no devopsenv-controlplane-1'
             runuser -l vagrant -c 'sshpass -p vagrant ssh-copy-id -o StrictHostKeyChecking=no devopsenv-node-1'
             runuser -l vagrant -c 'sshpass -p vagrant ssh-copy-id -o StrictHostKeyChecking=no devopsenv-node-2'
+            runuser -l vagrant -c 'echo PATH=\"\$HOME/.local/bin:\$PATH\" >> .profile'
             SHELL
           end
 
