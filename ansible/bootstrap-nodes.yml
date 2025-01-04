@@ -1,0 +1,5 @@
+---
+# file: bootstrap-nodes.yml
+- hosts: nodes
+  roles:
+    - nodes
