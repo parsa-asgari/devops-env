@@ -3,4 +3,11 @@
   shell: |
     echo "{{ hostvars['devopsenv-controlplane-1']['k3s_kubeconfig'].stdout }}" >> ~/.kube/config
   register: k3s_kubeconfig
-
+  run_once: true
+  args:
+    creates: /home/vagrant/.kube/config
+- name: Replace text in a file
+  ansible.builtin.replace:
+    path: ~/.kube/config
+    regexp: '127.0.0.1'
+    replace: 'devopsenv-controlplane-1'

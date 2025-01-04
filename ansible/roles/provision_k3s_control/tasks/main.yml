@@ -5,11 +5,10 @@
     state: present
 - name: Install K3s on master node
   shell: |
-    curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION={{ k3s_version }} sh -s -
+    curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--tls-san devopsenv-controlplane-1 --node-external-ip devopsenv-controlplane-1"  INSTALL_K3S_VERSION={{ k3s_version }} sh -s -
   args:
     creates: /etc/systemd/system/k3s.service
 - name: Get the K3s join token on the master
   shell: |
     cat /var/lib/rancher/k3s/server/node-token
   register: k3s_token
-
