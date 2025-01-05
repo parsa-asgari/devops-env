@@ -1,0 +1,5 @@
+---
+- name: Get the K3s kubeconfig
+  shell: |
+    cat /etc/rancher/k3s/k3s.yaml
+  register: k3s_kubeconfig

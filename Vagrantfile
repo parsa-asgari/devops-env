@@ -6,13 +6,6 @@ Vagrant.configure("2") do |config|
   # A list of VMs and their details.
   servers=[
       {
-        :hostname => "devopsenv-ansible",
-        :box => "bento/ubuntu-22.04", # the vagrant box's name
-        :version => "202407.23.0", # the vagrant box's version
-        :ip => "192.168.56.4", # the vagrant ip, for later local network service discovery
-        :ssh_port => '2210' # for ssh port forwarding on the host
-      },
-      {
         :hostname => "devopsenv-controlplane-1",
         :box => "bento/ubuntu-22.04",
         :version => "202407.23.0",
@@ -32,6 +25,13 @@ Vagrant.configure("2") do |config|
         :version => "202407.23.0",
         :ip => "192.168.56.7",
         :ssh_port => '2213'
+      },
+      {
+        :hostname => "devopsenv-ansible",
+        :box => "bento/ubuntu-22.04", # the vagrant box's name
+        :version => "202407.23.0", # the vagrant box's version
+        :ip => "192.168.56.4", # the vagrant ip, for later local network service discovery
+        :ssh_port => '2210' # for ssh port forwarding on the host
       }
     ]
 
@@ -60,15 +60,16 @@ Vagrant.configure("2") do |config|
             node.vm.provision "shell", inline: <<-SHELL
             sudo apt-get update
             sudo apt-get install -y git python3 python3-pip sshpass bash-completion
-            python3 -m pip install --upgrade pip
-            pip install ansible
-            [ -d devops-env ] && echo "skipping git clone. folder exists👍"  || git clone https://github.com/parsa-asgari/devops-env.git
             sudo bash -c 'cat /vagrant/hosts >> /etc/hosts'
-            ssh-keygen -b 2048 -t rsa -f ~/.ssh/id_rsa -q -N ""
-            sshpass -p vagrant ssh-copy-id -o StrictHostKeyChecking=no localhost 
-            sshpass -p vagrant ssh-copy-id -o StrictHostKeyChecking=no devopsenv-controlplane-1 
-            sshpass -p vagrant ssh-copy-id -o StrictHostKeyChecking=no devopsenv-node-1 
-            sshpass -p vagrant ssh-copy-id -o StrictHostKeyChecking=no devopsenv-node-2
+            runuser -l vagrant -c 'pip install --upgrade pip'
+            runuser -l vagrant -c 'pip install ansible'
+            runuser -l vagrant -c 'ssh-keygen -b 2048 -t rsa -f ~/.ssh/id_rsa -q -N ""'
+            runuser -l vagrant -c 'sshpass -p vagrant ssh-copy-id -o StrictHostKeyChecking=no devopsenv-ansible'
+            runuser -l vagrant -c 'sshpass -p vagrant ssh-copy-id -o StrictHostKeyChecking=no localhost'
+            runuser -l vagrant -c 'sshpass -p vagrant ssh-copy-id -o StrictHostKeyChecking=no devopsenv-controlplane-1'
+            runuser -l vagrant -c 'sshpass -p vagrant ssh-copy-id -o StrictHostKeyChecking=no devopsenv-node-1'
+            runuser -l vagrant -c 'sshpass -p vagrant ssh-copy-id -o StrictHostKeyChecking=no devopsenv-node-2'
+            runuser -l vagrant -c 'echo PATH=\"\$HOME/.local/bin:\$PATH\" >> .profile'
             SHELL
           end
 
