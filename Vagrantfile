@@ -6,28 +6,35 @@ Vagrant.configure("2") do |config|
   # A list of VMs and their details.
   servers=[
       {
-        :hostname => "devopsenv-controlplane-1",
+        :hostname => "homelab-controlplane-1",
         :box => "bento/ubuntu-22.04",
         :version => "202407.23.0",
         :ip => "192.168.56.5",
         :ssh_port => '2211'
       },
       {
-        :hostname => "devopsenv-node-1",
+        :hostname => "homelab-node-1",
         :box => "bento/ubuntu-22.04",
         :version => "202407.23.0",
         :ip => "192.168.56.6",
         :ssh_port => '2212'
       },
       {
-        :hostname => "devopsenv-node-2",
+        :hostname => "homelab-node-2",
         :box => "bento/ubuntu-22.04",
         :version => "202407.23.0",
         :ip => "192.168.56.7",
         :ssh_port => '2213'
       },
       {
-        :hostname => "devopsenv-ansible",
+        :hostname => "homelab-node-2",
+        :box => "bento/ubuntu-22.04",
+        :version => "202407.23.0",
+        :ip => "192.168.56.7",
+        :ssh_port => '2213'
+      },
+      {
+        :hostname => "homelab-ansible",
         :box => "bento/ubuntu-22.04", # the vagrant box's name
         :version => "202407.23.0", # the vagrant box's version
         :ip => "192.168.56.4", # the vagrant ip, for later local network service discovery
@@ -64,11 +71,11 @@ Vagrant.configure("2") do |config|
             runuser -l vagrant -c 'pip install --upgrade pip'
             runuser -l vagrant -c 'pip install ansible'
             runuser -l vagrant -c 'ssh-keygen -b 2048 -t rsa -f ~/.ssh/id_rsa -q -N ""'
-            runuser -l vagrant -c 'sshpass -p vagrant ssh-copy-id -o StrictHostKeyChecking=no devopsenv-ansible'
+            runuser -l vagrant -c 'sshpass -p vagrant ssh-copy-id -o StrictHostKeyChecking=no homelab-ansible'
             runuser -l vagrant -c 'sshpass -p vagrant ssh-copy-id -o StrictHostKeyChecking=no localhost'
-            runuser -l vagrant -c 'sshpass -p vagrant ssh-copy-id -o StrictHostKeyChecking=no devopsenv-controlplane-1'
-            runuser -l vagrant -c 'sshpass -p vagrant ssh-copy-id -o StrictHostKeyChecking=no devopsenv-node-1'
-            runuser -l vagrant -c 'sshpass -p vagrant ssh-copy-id -o StrictHostKeyChecking=no devopsenv-node-2'
+            runuser -l vagrant -c 'sshpass -p vagrant ssh-copy-id -o StrictHostKeyChecking=no homelab-controlplane-1'
+            runuser -l vagrant -c 'sshpass -p vagrant ssh-copy-id -o StrictHostKeyChecking=no homelab-node-1'
+            runuser -l vagrant -c 'sshpass -p vagrant ssh-copy-id -o StrictHostKeyChecking=no homelab-node-2'
             runuser -l vagrant -c 'echo PATH=\"\$HOME/.local/bin:\$PATH\" >> .profile'
             SHELL
           end

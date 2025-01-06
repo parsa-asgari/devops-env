@@ -1,6 +1,6 @@
 [k3s-control]
-devopsenv-controlplane-1
+homelab-controlplane-1
 
 [k3s-nodes]
-devopsenv-node-1
-devopsenv-node-2
+homelab-node-1
+homelab-node-2

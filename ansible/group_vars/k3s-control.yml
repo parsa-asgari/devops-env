@@ -1,2 +1,1 @@
-k3s_version: "v1.28.2+k3s1"
-master_domain: "devopsenv-controlplane-1"
+master_domain: "homelab-controlplane-1"
