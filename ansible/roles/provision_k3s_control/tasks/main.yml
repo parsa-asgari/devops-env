@@ -3,9 +3,19 @@
   package:
     name: curl
     state: present
+- name: Copy file to remote hosts
+  ansible.builtin.copy:
+    src: hosts
+    dest: /home/vagrant/hosts
+- name: Add hosts to /etc/hosts
+  shell: |
+    cat /home/vagrant/hosts >> /etc/hosts
+- name: Disable UFW
+  shell: |
+    ufw disable
 - name: Install K3s on master node
   shell: |
-    curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--tls-san devopsenv-controlplane-1 --node-external-ip devopsenv-controlplane-1"  INSTALL_K3S_VERSION={{ k3s_version }} sh -s -
+    curl -sfL https://get.k3s.io | sh -
   args:
     creates: /etc/systemd/system/k3s.service
 - name: Get the K3s join token on the master
