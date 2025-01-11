@@ -1,7 +1,7 @@
 ---
 - name: Set the K3s kubeconfig
   shell: |
-    echo "{{ hostvars['devopsenv-controlplane-1']['k3s_kubeconfig'].stdout }}" >> ~/.kube/config
+    echo "{{ hostvars['homelab-controlplane-1']['k3s_kubeconfig'].stdout }}" >> ~/.kube/config
   register: k3s_kubeconfig
   run_once: true
   args:
@@ -10,4 +10,4 @@
   ansible.builtin.replace:
     path: ~/.kube/config
     regexp: '127.0.0.1'
-    replace: 'devopsenv-controlplane-1'
+    replace: 'homelab-controlplane-1'
