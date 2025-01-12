@@ -77,6 +77,7 @@ Vagrant.configure("2") do |config|
             runuser -l vagrant -c 'sshpass -p vagrant ssh-copy-id -o StrictHostKeyChecking=no homelab-node-1'
             runuser -l vagrant -c 'sshpass -p vagrant ssh-copy-id -o StrictHostKeyChecking=no homelab-node-2'
             runuser -l vagrant -c 'echo PATH=\"\$HOME/.local/bin:\$PATH\" >> .profile'
+            runuser -l vagrant -c 'cd /vagrant/ansible && ansible-playbook -i k3s -i ansible site.yml'
             SHELL
           end
 

@@ -1,7 +1,7 @@
 ---
 - name: Set the K3s kubeconfig
   shell: |
-    echo "{{ hostvars['homelab-controlplane-1']['k3s_kubeconfig'].stdout }}" >> ~/.kube/config
+    mkdir ~/.kube && echo "{{ hostvars['homelab-controlplane-1']['k3s_kubeconfig'].stdout }}" >> ~/.kube/config
   register: k3s_kubeconfig
   run_once: true
   args:
