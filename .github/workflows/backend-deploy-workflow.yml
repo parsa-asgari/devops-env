@@ -41,6 +41,8 @@ jobs:
         minor_pattern: '^feat:'
         patch_pattern: '^fix:'
         default: patch
+      outputs:
+        version: ${{ steps.version.outputs.version }}
 
     - name: Create Git tag
       run: |
