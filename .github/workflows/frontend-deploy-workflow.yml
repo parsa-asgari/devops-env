@@ -13,7 +13,7 @@ env:
   IMAGE_NAME: parsa-asgari/devopsenv-frontend
 
 jobs:
-  build_and_push_image::
+  build_and_push_image:
     runs-on: ubuntu-latest
     defaults:
       run:
