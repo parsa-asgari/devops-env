@@ -37,6 +37,10 @@ jobs:
       uses: paulhatch/semantic-version@v3
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
+        major_pattern: '^feat!:'
+        minor_pattern: '^feat:'
+        patch_pattern: '^fix:'
+        default: patch
 
     - name: Create Git tag
       run: |
