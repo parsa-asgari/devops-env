@@ -16,7 +16,7 @@ jobs:
   build_and_push_image:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       packages: write
       id-token: write
       attestations: write
@@ -74,10 +74,10 @@ jobs:
     - name: Create GitHub Release
       uses: actions/create-release@v1
       with:
-        tag_name: ${{ steps.version.outputs.version }}
-        release_name: Release ${{ steps.version.outputs.version }}
+        tag_name: ${{ needs.build_and_push_image.outputs.version }}
+        release_name: Release ${{ needs.build_and_push_image.outputs.version }}
         body: |
-          New release with Docker image version ${{ steps.version.outputs.version }} deployed to Kubernetes.
+          New release with Docker image version ${{ needs.build_and_push_image.outputs.version }} deployed to Kubernetes.
         draft: false
         prerelease: false
       env:
