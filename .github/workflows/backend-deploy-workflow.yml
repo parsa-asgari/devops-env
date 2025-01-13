@@ -40,8 +40,17 @@ jobs:
 
     - name: Create Git tag
       run: |
-        git tag ${{ steps.version.outputs.version }}
-        git push origin ${{ steps.version.outputs.version }}
+        if git rev-parse ${{ steps.version.outputs.version }} >/dev/null 2>&1; then
+          echo "Tag ${{ steps.version.outputs.version }} already exists locally."
+        else
+          git tag ${{ steps.version.outputs.version }}
+        fi
+
+        if git ls-remote --tags origin | grep -q "refs/tags/${{ steps.version.outputs.version }}$"; then
+          echo "Tag ${{ steps.version.outputs.version }} already exists in remote."
+        else
+          git push origin ${{ steps.version.outputs.version }}
+        fi
 
     - uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
       with:
