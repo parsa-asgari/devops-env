@@ -10,7 +10,8 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import Image from 'next/image'
-import axios from 'axios'
+
+import { fetchFavoriteMovies } from '@/app/actions'
 
 type Movie = {
   id: string
@@ -23,21 +24,24 @@ type Movie = {
 export default function ImageCarousel() {
   const [movies, setMovies] =  React.useState<Movie[]>([]);
   React.useEffect(
-    () => {
-      axios.get(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/v1/favorite-movies`).then(
-        (response) => {
-          if (response.data)
-            setMovies( response.data.map((movie: Movie) => {
-              return {
-                id: movie.id,
-                name: movie.name,
-                poster_url: movie.poster_url,
-                rank: movie.rank
-              }
-            }))
-        }
+    () =>  {
+      const fetchDataEffect = async () => {
+        const data = await fetchFavoriteMovies()
+        console.log(data)
+        if (data)
+          setMovies( data.map((movie: Movie) => {
+            return {
+              id: movie.id,
+              name: movie.name,
+              poster_url: movie.poster_url,
+              rank: movie.rank
+            }
+          }
+        )
       )
-    }, [])
+    }
+    fetchDataEffect()
+  }, [])
   return (
     <section className="py-20 bg-muted">
       <div className="container mx-auto">
