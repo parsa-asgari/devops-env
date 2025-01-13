@@ -53,7 +53,7 @@ jobs:
         push: true
         tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}
         labels: ${{ steps.meta.outputs.labels }}
-        file: Dockerfile
+        load: false
 
   create_github_release:
     runs-on: ubuntu-latest
