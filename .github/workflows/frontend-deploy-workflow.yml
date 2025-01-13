@@ -20,6 +20,8 @@ jobs:
       packages: write
       id-token: write
       attestations: write
+    outputs:
+      version: ${{ steps.version.outputs.version }}
 
     steps:
     - name: Checkout code
@@ -41,8 +43,7 @@ jobs:
         minor_pattern: '^feat:'
         patch_pattern: '^fix:'
         default: patch
-      outputs:
-        version: ${{ steps.version.outputs.version }}
+        bump: auto
 
     - name: Create Git tag
       run: |
