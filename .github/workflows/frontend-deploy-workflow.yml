@@ -52,9 +52,9 @@ jobs:
       id: push
       uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
       with:
+        working-directory: ./frontend-src
         context: .
         push: true
-        working-directory: ./frontend-src
         tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}
         labels: ${{ steps.meta.outputs.labels }}
         file: Dockerfile
