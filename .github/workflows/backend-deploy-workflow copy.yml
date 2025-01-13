@@ -75,25 +75,25 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    deploy:
-      runs-on: ubuntu-latest
-      needs: [build-and-push-image, create_github_release]
-      permissions:
-        contents: write
-      steps:
-        - name: Set up Kubernetes kubeconfig
-          run: |
-            echo "${{ secrets.KUBECONFIG_FILE }}" > kubeconfig
-            chmod 600 kubeconfig
-          env:
-            KUBECONFIG_FILE: ${{ secrets.KUBECONFIG_FILE }}
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [build-and-push-image, create_github_release]
+    permissions:
+      contents: write
+    steps:
+      - name: Set up Kubernetes kubeconfig
+        run: |
+          echo "${{ secrets.KUBECONFIG_FILE }}" > kubeconfig
+          chmod 600 kubeconfig
+        env:
+          KUBECONFIG_FILE: ${{ secrets.KUBECONFIG_FILE }}
 
-        - name: Deploy to Kubernetes
-          uses: azure/setup-kubectl@v3
+      - name: Deploy to Kubernetes
+        uses: azure/setup-kubectl@v3
 
-        - name: Apply Kubernetes manifests
-          run: |
-            sed -i "s|image:.*|image: ${{ secrets.DOCKER_USERNAME }}/my-app:${{ steps.version.outputs.version }}|" k8s-manifest.yaml
-            kubectl apply -f k8s-manifest.yaml --kubeconfig=kubeconfig
-          env:
-            KUBECONFIG: ${{ secrets.KUBECONFIG_FILE }}
+      - name: Apply Kubernetes manifests
+        run: |
+          sed -i "s|image:.*|image: ${{ secrets.DOCKER_USERNAME }}/my-app:${{ steps.version.outputs.version }}|" k8s-manifest.yaml
+          kubectl apply -f k8s-manifest.yaml --kubeconfig=kubeconfig
+        env:
+          KUBECONFIG: ${{ secrets.KUBECONFIG_FILE }}
