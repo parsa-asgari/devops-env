@@ -27,7 +27,7 @@ jobs:
       id: filter
       with:
         filters: |
-          backend:
+          backend-src:
             - 'backend-src/**'  
 
     - name: Get semantic version

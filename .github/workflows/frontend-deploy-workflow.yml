@@ -27,7 +27,7 @@ jobs:
       id: filter
       with:
         filters: |
-          frontend:
+          frontend-src:
             - 'frontend-src/**'  
 
     - name: Get semantic version
