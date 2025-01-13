@@ -54,7 +54,7 @@ jobs:
       with:
         context: .
         push: true
-
+        working-directory: ./backend-src
         tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}
         labels: ${{ steps.meta.outputs.labels }}
         file: Dockerfile
