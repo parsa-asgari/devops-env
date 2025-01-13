@@ -8,8 +8,12 @@ on:
     branches:
     - main
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: parsa-asgari/devopsenv-frontend
+
 jobs:
-  deploy:
+  build-and-push-image::
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -32,33 +36,64 @@ jobs:
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Log in to Docker Hub
-      uses: docker/login-action@v2
+    - uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
       with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Build Docker image
-      run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/my-app:${{ steps.version.outputs.version }} .
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta
+      uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-    - name: Push Docker image to registry
-      run: |
-        docker push ${{ secrets.DOCKER_USERNAME }}/my-app:${{ steps.version.outputs.version }}
+    - name: Build and push Docker image
+      id: push
+      uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+      with:
+        context: .
+        push: true
 
-    - name: Set up Kubernetes kubeconfig
-      run: |
-        echo "${{ secrets.KUBECONFIG_FILE }}" > kubeconfig
-        chmod 600 kubeconfig
-      env:
-        KUBECONFIG_FILE: ${{ secrets.KUBECONFIG_FILE }}
+        tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}
+        labels: ${{ steps.meta.outputs.labels }}
+        file: Dockerfile
 
-    - name: Deploy to Kubernetes
-      uses: azure/setup-kubectl@v3
+  create_github_release:
+    runs-on: ubuntu-latest
+    needs: [build-and-push-image]
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v2
+      - uses: softprops/action-gh-release@v1
+        with:
+          name:
+          tag_name: '${{ steps.version.outputs.version }}'
+          generate_release_notes: true
+          draft: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Apply Kubernetes manifests
-      run: |
-        sed -i "s|image:.*|image: ${{ secrets.DOCKER_USERNAME }}/my-app:${{ steps.version.outputs.version }}|" k8s-manifest.yaml
-        kubectl apply -f k8s-manifest.yaml --kubeconfig=kubeconfig
-      env:
-        KUBECONFIG: ${{ secrets.KUBECONFIG_FILE }}
+    deploy:
+      runs-on: ubuntu-latest
+      needs: [build-and-push-image, create_github_release]
+      permissions:
+        contents: write
+      steps:
+        - name: Set up Kubernetes kubeconfig
+          run: |
+            echo "${{ secrets.KUBECONFIG_FILE }}" > kubeconfig
+            chmod 600 kubeconfig
+          env:
+            KUBECONFIG_FILE: ${{ secrets.KUBECONFIG_FILE }}
+
+        - name: Deploy to Kubernetes
+          uses: azure/setup-kubectl@v3
+
+        - name: Apply Kubernetes manifests
+          run: |
+            sed -i "s|image:.*|image: ${{ secrets.DOCKER_USERNAME }}/my-app:${{ steps.version.outputs.version }}|" k8s-manifest.yaml
+            kubectl apply -f k8s-manifest.yaml --kubeconfig=kubeconfig
+          env:
+            KUBECONFIG: ${{ secrets.KUBECONFIG_FILE }}
