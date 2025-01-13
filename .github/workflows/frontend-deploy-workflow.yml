@@ -1,4 +1,4 @@
-name: Deploy to Kubernetes
+name: Deploy Frontend to Homelab k3s
 
 on:
   push:
@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: frontend-src
+        working-directory: ./frontend-src
 
     steps:
     - name: Checkout code
