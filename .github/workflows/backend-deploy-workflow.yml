@@ -59,8 +59,8 @@ jobs:
         working-directory: ./backend-src
 
       # Step 4: Run tests
-      - name: Run tests
-        run: pytest
+      - name: Run  migrations & tests
+        run: piccolo migrations forwards all && pytest
         working-directory: ./backend-src
         env:
           POSTGRES_PASSWORD: postgres
