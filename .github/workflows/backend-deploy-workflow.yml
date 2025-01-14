@@ -61,9 +61,14 @@ jobs:
 
       # Step 4: Run tests
       - name: Run tests
-        run: POSTGRES_PASSWORD=postgres POSTGRES_USER=postgres POSTGRES_HOST=postgres POSTGRES_PORT=5432 POSTGRES_DB=postgres pytest
+        run: pytest
         working-directory: ./backend-src
-
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_HOST: postgres
+          POSTGRES_PORT: 5432
+          POSTGRES_DB: postgres
 
   build_and_push_image:
     runs-on: ubuntu-latest
