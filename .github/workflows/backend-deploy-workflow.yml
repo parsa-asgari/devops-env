@@ -15,8 +15,6 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
-    # Docker Hub image that `container-job` executes in
-    container: cicirello/pyaction:latest
     # Service containers to run with `container-job`
     services:
       # Label used to access the service container
@@ -32,6 +30,9 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5432:5432
     steps:
       # Step 1: Checkout code
       - name: Checkout code
@@ -64,7 +65,7 @@ jobs:
         env:
           POSTGRES_PASSWORD: postgres
           POSTGRES_USER: postgres
-          POSTGRES_HOST: db
+          POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432
           POSTGRES_DB: postgres
 
