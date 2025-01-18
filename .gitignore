@@ -1,1 +1,4 @@
 .vagrant
+backend-src/venv
+backend-src/.venv
+frontend-src/node_modules
