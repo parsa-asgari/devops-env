@@ -27,13 +27,6 @@ Vagrant.configure("2") do |config|
         :ssh_port => '2213'
       },
       {
-        :hostname => "homelab-node-2",
-        :box => "bento/ubuntu-22.04",
-        :version => "202407.23.0",
-        :ip => "192.168.56.7",
-        :ssh_port => '2213'
-      },
-      {
         :hostname => "homelab-ansible",
         :box => "bento/ubuntu-22.04", # the vagrant box's name
         :version => "202407.23.0", # the vagrant box's version
@@ -51,13 +44,13 @@ Vagrant.configure("2") do |config|
           node.vm.network "forwarded_port", guest: 22, host: machine[:ssh_port], id: "ssh"
           node.vm.provider :virtualbox do |vb|
             if node.vm.hostname.include?('controlplane')
-              vb.customize ["modifyvm", :id, "--memory", 3000]
+              vb.customize ["modifyvm", :id, "--memory", 2000]
               vb.customize ["modifyvm", :id, "--cpus", 2]
             elsif node.vm.hostname.include?('node')
-              vb.customize ["modifyvm", :id, "--memory", 4000]
+              vb.customize ["modifyvm", :id, "--memory", 3000]
               vb.customize ["modifyvm", :id, "--cpus", 4]
             elsif node.vm.hostname.include?('ansible')
-              vb.customize ["modifyvm", :id, "--memory", 768]
+              vb.customize ["modifyvm", :id, "--memory", 1500]
               vb.customize ["modifyvm", :id, "--cpus", 2]
             end
           end
