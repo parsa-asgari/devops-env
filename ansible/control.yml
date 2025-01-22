@@ -2,5 +2,10 @@
 # file: control.yml
 - hosts: ansible
   roles:
-    - provision_ansible
+    - role: provision_ansible
   become: yes
+
+- hosts: ansible
+  roles:
+    - role: provision_github_runner
+  become: no
