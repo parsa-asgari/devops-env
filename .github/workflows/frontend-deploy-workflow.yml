@@ -4,9 +4,8 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-    - main
+    paths:
+      - backend-src/**
 
 env:
   REGISTRY: ghcr.io
@@ -117,6 +116,7 @@ jobs:
 
       - name: Apply Kubernetes manifests
         run: |
+          # replace and update the image to point to the newest pushed image
           sed -i "s|image:.*|image: ${{ secrets.DOCKER_USERNAME }}/my-app:${{ steps.version.outputs.version }}|" k8s-manifest.yaml
           kubectl apply -f k8s-manifest.yaml --kubeconfig=kubeconfig
         env:
